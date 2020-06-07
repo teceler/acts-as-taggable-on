@@ -11,8 +11,6 @@ describe 'Single Table Inheritance' do
     let(:"inheriting_#{n}") { InheritingTaggableModel.new(name: "Inheriting Model #{n}") }
   end
 
-  let(:student) { Student.create! }
-
   describe 'tag contexts' do
     it 'should pass on to STI-inherited models' do
       expect(inheriting_model).to respond_to(:tag_list, :skill_list, :language_list)
@@ -159,52 +157,8 @@ describe 'Single Table Inheritance' do
     end
   end
 
-  describe 'ownership' do
-    it 'should have taggings' do
-      student.tag(taggable, with: 'ruby,scheme', on: :tags)
-      expect(student.owned_taggings.count).to eq(2)
-    end
-
-    it 'should have tags' do
-      student.tag(taggable, with: 'ruby,scheme', on: :tags)
-      expect(student.owned_tags.count).to eq(2)
-    end
-
-    it 'should return tags for the inheriting tagger' do
-      student.tag(taggable, with: 'ruby, scheme', on: :tags)
-      expect(taggable.tags_from(student)).to eq(%w(ruby scheme))
-    end
-
-    it 'returns all owner tags on the taggable' do
-      student.tag(taggable, with: 'ruby, scheme', on: :tags)
-      student.tag(taggable, with: 'skill_one', on: :skills)
-      student.tag(taggable, with: 'english, spanish', on: :language)
-      expect(taggable.owner_tags(student).count).to eq(5)
-      expect(taggable.owner_tags(student).sort == %w(english ruby scheme skill_one spanish))
-    end
-
-
-    it 'returns owner tags on the tagger' do
-      student.tag(taggable, with: 'ruby, scheme', on: :tags)
-      expect(taggable.owner_tags_on(student, :tags).count).to eq(2)
-    end
-
-    it 'returns owner tags on the taggable for an array of contexts' do
-      student.tag(taggable, with: 'ruby, scheme', on: :tags)
-      student.tag(taggable, with: 'skill_one, skill_two', on: :skills)
-      expect(taggable.owner_tags_on(student, [:tags, :skills]).count).to eq(4)
-      expect(taggable.owner_tags_on(student, [:tags, :skills]).sort == %w(ruby scheme skill_one skill_two))
-    end
-
-    it 'should scope objects returned by tagged_with by owners' do
-      student.tag(taggable, with: 'ruby, scheme', on: :tags)
-      expect(TaggableModel.tagged_with(%w(ruby scheme), owned_by: student).count).to eq(1)
-    end
-  end
-
   describe 'a subclass of Tag' do
     let(:company) { Company.new(:name => 'Dewey, Cheatham & Howe') }
-    let(:user) { User.create! }
 
     subject { Market.create! :name => 'finance' }
 
@@ -220,12 +174,6 @@ describe 'Single Table Inheritance' do
       company.location_list = 'cambridge'
       company.save!
       expect(ActsAsTaggableOn::Tag.where(name: 'cambridge', type: nil)).to_not be_empty
-    end
-
-    it 'is returned with proper type through ownership' do
-      user.tag(company, :with => 'ripoffs, rackets', :on => :markets)
-      tags = company.owner_tags_on(user, :markets)
-      expect(tags.all? { |tag| tag.is_a? Market }).to be_truthy
     end
   end
 end

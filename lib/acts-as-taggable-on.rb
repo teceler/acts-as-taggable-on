@@ -19,7 +19,6 @@ module ActsAsTaggableOn
   autoload :GenericParser
   autoload :DefaultParser
   autoload :Taggable
-  autoload :Tagger
   autoload :Tagging
   autoload :TagsHelper
   autoload :VERSION
@@ -29,7 +28,6 @@ module ActsAsTaggableOn
     autoload :Collection
     autoload :Core
     autoload :Dirty
-    autoload :Ownership
     autoload :Related
     autoload :TagListType
   end
@@ -109,7 +107,6 @@ end
 
 ActiveSupport.on_load(:active_record) do
   extend ActsAsTaggableOn::Taggable
-  include ActsAsTaggableOn::Tagger
 end
 ActiveSupport.on_load(:action_view) do
   include ActsAsTaggableOn::TagsHelper

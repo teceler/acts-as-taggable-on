@@ -94,7 +94,6 @@ module ActsAsTaggableOn
       include Core
       include Collection
       include Cache
-      include Ownership
       include Related
     end
   end
