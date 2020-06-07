@@ -20,7 +20,6 @@ module ActsAsTaggableOn
   autoload :DefaultParser
   autoload :Taggable
   autoload :Tagging
-  autoload :TagsHelper
   autoload :VERSION
 
   autoload_under 'taggable' do
@@ -107,7 +106,4 @@ end
 
 ActiveSupport.on_load(:active_record) do
   extend ActsAsTaggableOn::Taggable
-end
-ActiveSupport.on_load(:action_view) do
-  include ActsAsTaggableOn::TagsHelper
 end
