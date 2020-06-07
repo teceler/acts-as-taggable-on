@@ -19,22 +19,8 @@ describe ActsAsTaggableOn::Tag do
 
 
   describe 'named like any' do
-    context 'case insensitive collation and unique index on tag name', if: using_case_insensitive_collation? do
-      before(:each) do
-        ActsAsTaggableOn::Tag.create(name: 'Awesome')
-        ActsAsTaggableOn::Tag.create(name: 'epic')
-      end
-
-      it 'should find both tags' do
-        expect(ActsAsTaggableOn::Tag.named_like_any(%w(awesome epic)).count).to eq(2)
-      end
-    end
 
     context 'case insensitive collation without indexes or case sensitive collation with indexes' do
-      if using_case_insensitive_collation?
-        include_context 'without unique index'
-      end
-
       before(:each) do
         ActsAsTaggableOn::Tag.create(name: 'Awesome')
         ActsAsTaggableOn::Tag.create(name: 'awesome')
@@ -83,7 +69,7 @@ describe ActsAsTaggableOn::Tag do
     end
   end
 
-  describe 'find or create by unicode name', unless: using_sqlite? do
+  describe 'find or create by unicode name' do
     before(:each) do
       @tag.name = 'привет'
       @tag.save
@@ -95,12 +81,6 @@ describe ActsAsTaggableOn::Tag do
 
     it 'should find by name case insensitive' do
       expect(ActsAsTaggableOn::Tag.find_or_create_with_like_by_name('ПРИВЕТ')).to eq(@tag)
-    end
-
-    it 'should find by name accent insensitive', if: using_case_insensitive_collation? do
-      @tag.name = 'inupiat'
-      @tag.save
-      expect(ActsAsTaggableOn::Tag.find_or_create_with_like_by_name('Iñupiat')).to eq(@tag)
     end
   end
 
@@ -119,10 +99,6 @@ describe ActsAsTaggableOn::Tag do
     end
 
     context 'case sensitive' do
-      if using_case_insensitive_collation?
-        include_context 'without unique index'
-      end
-
       it 'should find by name case sensitive' do
         ActsAsTaggableOn.strict_case_match = true
         expect {
@@ -138,10 +114,6 @@ describe ActsAsTaggableOn::Tag do
     end
 
     context 'case sensitive' do
-      if using_case_insensitive_collation?
-        include_context 'without unique index'
-      end
-
       it 'should find or create by name case sensitive' do
         ActsAsTaggableOn.strict_case_match = true
         expect {
@@ -238,10 +210,6 @@ describe ActsAsTaggableOn::Tag do
     end
 
     context 'case sensitive' do
-      if using_case_insensitive_collation?
-        include_context 'without unique index'
-      end
-
       it 'should find by name case sensitively' do
         expect {
           ActsAsTaggableOn::Tag.find_or_create_with_like_by_name('AWESOME')
@@ -252,10 +220,6 @@ describe ActsAsTaggableOn::Tag do
     end
 
     context 'case sensitive' do
-      if using_case_insensitive_collation?
-        include_context 'without unique index'
-      end
-
       it 'should have a named_scope named(something) that matches exactly' do
         uppercase_tag = ActsAsTaggableOn::Tag.create(name: 'Cool')
         @tag.name = 'cool'

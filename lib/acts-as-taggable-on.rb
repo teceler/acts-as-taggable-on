@@ -73,13 +73,12 @@ module ActsAsTaggableOn
       @remove_unused_tags = false
       @tags_counter = true
       @default_parser = DefaultParser
-      @force_binary_collation = false
       @tags_table = :tags
       @taggings_table = :taggings
     end
 
     def strict_case_match=(force_cs)
-      @strict_case_match = force_cs unless @force_binary_collation
+      @strict_case_match = force_cs
     end
 
     def delimiter=(string)
@@ -90,15 +89,6 @@ a ActsAsTaggableOn.default_parser instead
 WARNING
       @delimiter = string
     end
-
-    def force_binary_collation=(force_bin)
-      Configuration.apply_binary_collation(false)
-      @force_binary_collation = false
-    end
-
-    def self.apply_binary_collation(bincoll)
-    end
-
   end
 
   setup

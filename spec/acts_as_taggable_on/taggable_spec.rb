@@ -297,7 +297,7 @@ describe 'Taggable' do
     expect(TaggableModel.select('distinct(taggable_models.id), taggable_models.*').joins(:untaggable_models).tagged_with(['rails', 'ruby'], :any => false).to_a.sort).to eq([bob, frank].sort)
   end
 
-  it 'should not care about case for unicode names', unless: using_sqlite? do
+  it 'should not care about case for unicode names' do
     ActsAsTaggableOn.strict_case_match = false
     TaggableModel.create(name: 'Anya', tag_list: 'ПРИВЕТ')
     TaggableModel.create(name: 'Igor', tag_list: 'привет')
@@ -632,7 +632,7 @@ describe 'Taggable' do
 
     end
 
-    xit 'should not duplicate tags added on different threads', if: supports_concurrency?, skip: 'FIXME, Deadlocks in travis' do
+    xit 'should not duplicate tags added on different threads', skip: 'FIXME, Deadlocks in travis' do
       #TODO, try with more threads and fix deadlock
       thread_count = 4
       barrier = Barrier.new thread_count
@@ -782,7 +782,7 @@ describe 'Taggable' do
   end
 end
 
-describe 'Taggable model with json columns', if: postgresql_support_json? do
+describe 'Taggable model with json columns' do
   before(:each) do
     @taggable = TaggableModelWithJson.new(:name => 'Bob Jones')
     @taggables = [@taggable, TaggableModelWithJson.new(:name => 'John Doe')]

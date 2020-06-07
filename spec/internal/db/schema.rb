@@ -88,23 +88,17 @@ ActiveRecord::Schema.define version: 0 do
     t.column :cached_tag_list, :string
   end
 
-  # Special cases for postgresql
-  if using_postgresql?
+  create_table :other_cached_with_array_models, force: true do |t|
+    t.column :name, :string
+    t.column :type, :string
+    t.column :cached_language_list, :string, array: true
+    t.column :cached_status_list, :string, array: true
+    t.column :cached_glass_list, :string, array: true
+  end
 
-    create_table :other_cached_with_array_models, force: true do |t|
-      t.column :name, :string
-      t.column :type, :string
-      t.column :cached_language_list, :string, array: true
-      t.column :cached_status_list, :string, array: true
-      t.column :cached_glass_list, :string, array: true
-    end
-
-    if postgresql_support_json?
-      create_table :taggable_model_with_jsons, :force => true do |t|
-        t.column :name, :string
-        t.column :type, :string
-        t.column :opts, :json
-      end
-    end
+  create_table :taggable_model_with_jsons, :force => true do |t|
+    t.column :name, :string
+    t.column :type, :string
+    t.column :opts, :json
   end
 end
