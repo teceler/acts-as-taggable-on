@@ -47,14 +47,6 @@ describe ActsAsTaggableOn::Tag do
     end
   end
 
-  describe 'named any' do
-    context 'with some special characters combinations', if: using_mysql? do
-      it 'should not raise an invalid encoding exception' do
-        expect{ActsAsTaggableOn::Tag.named_any(["holä", "hol'ä"])}.not_to raise_error
-      end
-    end
-  end
-
   describe 'for context' do
     before(:each) do
       @user.skill_list.add('ruby')
@@ -280,12 +272,6 @@ describe ActsAsTaggableOn::Tag do
       record = ActsAsTaggableOn::Tag.find_or_create_with_like_by_name(name)
       record.reload
       expect(record.name.encoding).to eq(original_encoding)
-    end
-
-    context 'named any with some special characters combinations', if: using_mysql? do
-      it 'should not raise an invalid encoding exception' do
-        expect{ActsAsTaggableOn::Tag.named_any(["holä", "hol'ä"])}.not_to raise_error
-      end
     end
   end
 

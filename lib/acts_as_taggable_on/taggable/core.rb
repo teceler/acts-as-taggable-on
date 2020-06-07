@@ -182,12 +182,8 @@ module ActsAsTaggableOn::Taggable
       opts = ["#{tagging_table_name}.context = ?", context.to_s]
       scope = base_tags.where(opts)
 
-      if ActsAsTaggableOn::Utils.using_postgresql?
-        group_columns = grouped_column_names_for(ActsAsTaggableOn::Tag)
-        scope.order(Arel.sql("max(#{tagging_table_name}.created_at)")).group(group_columns)
-      else
-        scope.group("#{ActsAsTaggableOn::Tag.table_name}.#{ActsAsTaggableOn::Tag.primary_key}")
-      end.to_a
+      group_columns = grouped_column_names_for(ActsAsTaggableOn::Tag)
+      scope.order(Arel.sql("max(#{tagging_table_name}.created_at)")).group(group_columns).to_a
     end
 
     ##
@@ -321,4 +317,3 @@ module ActsAsTaggableOn::Taggable
     end
   end
 end
-

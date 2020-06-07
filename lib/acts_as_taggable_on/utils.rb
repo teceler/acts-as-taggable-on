@@ -8,20 +8,12 @@ module ActsAsTaggableOn
         ActsAsTaggableOn::Tag.connection
       end
 
-      def using_postgresql?
-        connection && connection.adapter_name == 'PostgreSQL'
-      end
-
-      def using_mysql?
-        connection && connection.adapter_name == 'Mysql2'
-      end
-
       def sha_prefix(string)
         Digest::SHA1.hexdigest(string)[0..6]
       end
 
       def like_operator
-        using_postgresql? ? 'ILIKE' : 'LIKE'
+        'ILIKE'
       end
 
       def legacy_activerecord?

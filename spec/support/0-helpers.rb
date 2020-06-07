@@ -1,5 +1,5 @@
 def using_sqlite?
-  ActsAsTaggableOn::Utils.connection && ActsAsTaggableOn::Utils.connection.adapter_name == 'SQLite'
+  false
 end
 
 def supports_concurrency?
@@ -7,7 +7,7 @@ def supports_concurrency?
 end
 
 def using_postgresql?
-  ActsAsTaggableOn::Utils.using_postgresql?
+  true
 end
 
 def postgresql_version
@@ -19,14 +19,14 @@ def postgresql_version
 end
 
 def postgresql_support_json?
-  postgresql_version >= 9.2
+  true
 end
 
 
 def using_mysql?
-  ActsAsTaggableOn::Utils.using_mysql?
+  false
 end
 
 def using_case_insensitive_collation?
-  using_mysql? && ActsAsTaggableOn::Utils.connection.collation =~ /_ci\Z/
+  false
 end

@@ -759,12 +759,6 @@ describe 'Taggable' do
       TaggableModel.all.each { |t| t.save }
     end
 
-    context 'Model.limit(x).tag_counts.sum(:tags_count)' do
-      it 'should not break on Mysql' do
-        expect(TaggableModel.limit(2).tag_counts.sum('tags_count').to_i).to eq(5)
-      end
-    end
-
     context 'regression prevention, just making sure these esoteric queries still work' do
       context 'Model.tag_counts.limit(x)' do
         it 'should limit the tag objects (not very useful, of course)' do

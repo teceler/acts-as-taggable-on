@@ -116,7 +116,7 @@ module ActsAsTaggableOn
       end
 
       def binary
-        ActsAsTaggableOn::Utils.using_mysql? ? 'BINARY ' : nil
+        nil
       end
 
       def as_8bit_ascii(string)

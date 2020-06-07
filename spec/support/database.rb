@@ -1,6 +1,6 @@
 # set adapter to use, default is sqlite3
 # to use an alternative adapter run => rake spec DB='postgresql'
-db_name = ENV['DB'] || 'sqlite3'
+db_name = 'postgresql'
 database_yml = File.expand_path('../../internal/config/database.yml', __FILE__)
 
 if File.exist?(database_yml)
@@ -12,21 +12,9 @@ if File.exist?(database_yml)
   ActiveRecord::Base.logger.level = ENV['TRAVIS'] ? ::Logger::ERROR : ::Logger::DEBUG
   config = ActiveRecord::Base.configurations[db_name]
 
-  begin
-    ActiveRecord::Base.establish_connection(db_name.to_sym)
-    ActiveRecord::Base.connection
-  rescue
-    case db_name
-      when /mysql/
-        ActiveRecord::Base.establish_connection(config.merge('database' => nil))
-        ActiveRecord::Base.connection.create_database(config['database'], {charset: 'utf8', collation: 'utf8_unicode_ci'})
-      when 'postgresql'
-        ActiveRecord::Base.establish_connection(config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
-        ActiveRecord::Base.connection.create_database(config['database'], config.merge('encoding' => 'utf8'))
-    end
-
-    ActiveRecord::Base.establish_connection(config)
-  end
+  ActiveRecord::Base.establish_connection(config.merge('database' => 'postgres', 'schema_search_path' => 'public'))
+  #ActiveRecord::Base.connection.create_database(config['database'], config.merge('encoding' => 'utf8'))
+  ActiveRecord::Base.establish_connection(config)
 
   require File.dirname(__FILE__) + '/../internal/db/schema.rb'
   Dir[File.dirname(__dir__) + '/internal/app/models/*.rb'].each { |f| require f }

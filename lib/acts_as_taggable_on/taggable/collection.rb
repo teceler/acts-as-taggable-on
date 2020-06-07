@@ -135,15 +135,7 @@ module ActsAsTaggableOn::Taggable
 
       def generate_tagging_scope_in_clause(tagging_scope, table_name, primary_key)
         table_name_pkey = "#{table_name}.#{primary_key}"
-        if ActsAsTaggableOn::Utils.using_mysql?
-          # See https://github.com/mbleigh/acts-as-taggable-on/pull/457 for details
-          scoped_ids = pluck(table_name_pkey)
-          tagging_scope = tagging_scope.where("#{ActsAsTaggableOn::Tagging.table_name}.taggable_id IN (?)", scoped_ids)
-        else
-          tagging_scope = tagging_scope.where("#{ActsAsTaggableOn::Tagging.table_name}.taggable_id IN(#{safe_to_sql(except(:select).select(table_name_pkey))})")
-        end
-
-        tagging_scope
+        tagging_scope.where("#{ActsAsTaggableOn::Tagging.table_name}.taggable_id IN(#{safe_to_sql(except(:select).select(table_name_pkey))})")
       end
 
       def tagging_conditions(options)

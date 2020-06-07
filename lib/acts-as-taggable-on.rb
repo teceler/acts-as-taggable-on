@@ -95,28 +95,11 @@ WARNING
     end
 
     def force_binary_collation=(force_bin)
-      if Utils.using_mysql?
-        if force_bin
-          Configuration.apply_binary_collation(true)
-          @force_binary_collation = true
-          @strict_case_match = true
-        else
-          Configuration.apply_binary_collation(false)
-          @force_binary_collation = false
-        end
-      end
+      Configuration.apply_binary_collation(false)
+      @force_binary_collation = false
     end
 
     def self.apply_binary_collation(bincoll)
-      if Utils.using_mysql?
-        coll = 'utf8_general_ci'
-        coll = 'utf8_bin' if bincoll
-        begin
-          ActiveRecord::Migration.execute("ALTER TABLE #{Tag.table_name} MODIFY name varchar(255) CHARACTER SET utf8 COLLATE #{coll};")
-        rescue Exception => e
-          puts "Trapping #{e.class}: collation parameter ignored while migrating for the first time."
-        end
-      end
     end
 
   end
